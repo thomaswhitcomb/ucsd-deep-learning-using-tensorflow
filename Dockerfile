@@ -2,6 +2,8 @@ FROM ubuntu:latest
 RUN apt update
 RUN apt install --assume-yes python3
 RUN apt install --assume-yes python3-pip
+RUN apt install -y vim
+RUN apt install -y git
 RUN pip3 install --upgrade pip
 RUN pip3 install tensorflow
 RUN pip3 install Pandas
