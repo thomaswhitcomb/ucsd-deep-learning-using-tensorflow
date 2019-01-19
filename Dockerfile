@@ -1,10 +1,15 @@
 FROM ubuntu:latest 
-RUN apt update
-RUN apt install --assume-yes python3
-RUN apt install --assume-yes python3-pip
+RUN apt update && apt upgrade -y 
+RUN apt install -y python3
+RUN apt install -y python3-pip
 RUN apt install -y vim
 RUN apt install -y git
+#
+RUN git config --global user.email "thomaswhitcomb@gmail.com"
+RUN git config --global user.name "Tom Whitcomb"
+#
 RUN pip3 install --upgrade pip
+RUN echo "ee44b511e9acff615ce3a6d7b5f121a8fae247f5" > token.txt
 RUN pip3 install tensorflow
 RUN pip3 install Pandas
 RUN pip3 install NumPy
