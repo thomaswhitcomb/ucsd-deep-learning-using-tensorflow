@@ -37,6 +37,15 @@ num = pd.Series(range(1,101,1))
 sum = 0
 for x in num:
   sum = sum + x
-print(sum)
 
-print(np.sum(num))
+if sum == 5050 and sum == np.sum(num):
+  print("Problem #4 is correct")
+else:
+  print("Problem #4 is incorrect")
+############################################################
+# Problem #5
+############################################################
+if np.sum(num + 5) == 5550:
+  print("Problem #5 is correct")
+else:
+  print("Problem #5 is not correct")
