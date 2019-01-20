@@ -96,9 +96,9 @@ def main():
     print("Problem 7 - Number of observations in dataframe is ",
           (house_data.shape[0])*house_data.shape[1])
     print("Problem 7 - Average house price is ", house_data['price'].mean())
-    bm = house_data['price'].gt(500000)
+     house_gt500k = house_data['price'].gt(500000)
     print("Problem 7 - Number of houses which are priced greater than $500,000 is ",
-          house_data[bm].shape[0])
+          house_data[house_gt500k].shape[0])
     ############################################################
     # Problem #8
     ############################################################
