@@ -12,5 +12,9 @@ def main():
     sess = tf.Session()
     print(sess.run(tensor_sum))
 
+    a1 = [[[1,1,1,1],[2,2,2,2]],[[1,1,1,1],[2,2,2,2]],[[1,1,1,1],[2,2,2,2]],[[1,1,1,1],[2,2,2,2]] ]
+    s1 = tf.stack(a1,axis=0)
+    print(s1.shape)
+
 if __name__ == "__main__":
     main()
