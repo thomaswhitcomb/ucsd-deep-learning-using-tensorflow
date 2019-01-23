@@ -52,14 +52,17 @@ def problem5():
 
     with tf.Session() as sess:
       print(sess.run(y))
+def graphit(name,tensor):
+    with tf.Session() as sess:
+        with tf.summary.FileWriter(name, sess.graph) as writer:
+          sess.run(tensor)
 
 def problem6():
     x,s,r,y = problem5X()
-    with tf.Session() as sess:
-        with tf.summary.FileWriter("x", sess.graph) as writer:
-          sess.run(x)
-
-    return 0
+    graphit("graphs/x",x)
+    graphit("graphs/s",s)
+    graphit("graphs/r",r)
+    graphit("graphs/y",y)
     
 
 def main():
