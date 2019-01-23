@@ -25,8 +25,7 @@ def problem4():
     print("Problem #4",t.shape)
     with tf.Session() as sess:
       print("Problem #4\n",sess.run(t))
-
-def problem5():
+def problem5X():
     a = tf.constant(1.12,name="a")
     b = tf.constant(2.34,name="b")
     c = tf.constant(0.72,name="c")
@@ -34,20 +33,34 @@ def problem5():
     f = tf.constant(19.83,name="f")
 
     x = (tf.add(tf.constant(1.0),tf.add(a/b,c/(f*f))))
+    s = (b-a) / (d-c)
+    r = 1.0 / ((1.0/a)+(1.0/b)+(1.0/c)+(1.0/d))
+    y = a*b*(1.0/c)*(f*f/2)
+    return x,s,r,y
+
+
+def problem5():
+    x,s,r,y = problem5X()
     with tf.Session() as sess:
       print(sess.run(x))
 
-    s = (b-a) / (d-c)
     with tf.Session() as sess:
       print(sess.run(s))
 
-    r = 1.0 / ((1.0/a)+(1.0/b)+(1.0/c)+(1.0/d))
     with tf.Session() as sess:
       print(sess.run(r))
 
-    y = a*b*(1.0/c)*(f*f/2)
     with tf.Session() as sess:
       print(sess.run(y))
+
+def problem6():
+    x,s,r,y = problem5X()
+    with tf.Session() as sess:
+        with tf.summary.FileWriter("x", sess.graph) as writer:
+          sess.run(x)
+
+    return 0
+    
 
 def main():
     problem1()
@@ -55,6 +68,7 @@ def main():
     problem3()
     problem3()
     problem5()
+    problem6()
 
 if __name__ == "__main__":
     main()
