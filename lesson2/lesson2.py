@@ -23,21 +23,22 @@ class Tensors:
 
     def test(self):
         if run(self.x()).item() != 1.4804635047912598:
-          print("Tensors - x is bad: ",run(self.x()).item())
+            print("Tensors - x is bad: ",run(self.x()).item())
         if run(self.s()).item() != 13.555558204650879:
-          print("Tensors - s is bad: ",run(self.s()).item())
+            print("Tensors - s is bad: ",run(self.s()).item())
         if run(self.r()).item() != 0.2535712718963623:
-          print("Tensors - r is bad: ",run(self.r()).item())
+            print("Tensors - r is bad: ",run(self.r()).item())
         if run(self.y()).item() != 715.676513671875:
-          print("Tensors - y s bad: ",run(self.y()).item())
+            print("Tensors - y s bad: ",run(self.y()).item())
       
 
 def problem1():
     tensor_x = tf.constant(list(range(100,110)))
     tensor_y = tf.constant([34, 28, 45, 67, 89, 93, 24, 49, 11, 7])
     tensor_sum = tf.add(tensor_x,tensor_y)
-    print("Problem #1 Lazy",tensor_sum)
-    print("Problem #1 Eager",run(tensor_sum))
+    print("Problem #1")
+    print("\tLazy",tensor_sum)
+    print("\tEager",run(tensor_sum))
 
 def problem2():
     x = tf.constant([[1,2,3,4],[5,6,7,8]])
@@ -52,8 +53,9 @@ def problem3():
 def problem4():
     x = tf.constant([[1,2,3,4],[5,6,7,8],[9,10,11,12]])
     t = tf.reshape(x,[6,2])
-    print("Problem #4",t.shape)
-    print("Problem #4\n",run(t))
+    print("Problem #4")
+    print("\t",t.shape)
+    print("\t",run(t))
 
 def run(tensor):
     with tf.Session() as sess:
@@ -63,10 +65,10 @@ def problem5():
     tensors = Tensors()
     tensors.test()
     print("Problem #5")
-    print("x = ",run(tensors.x()))
-    print("s = ",run(tensors.s()))
-    print("r = ",run(tensors.r()))
-    print("y = ",run(tensors.y()))
+    print("\tx = ",run(tensors.x()))
+    print("\ts = ",run(tensors.s()))
+    print("\tr = ",run(tensors.r()))
+    print("\ty = ",run(tensors.y()))
 
 def graphit(name,tensor):
     with tf.Session() as sess:
@@ -75,10 +77,29 @@ def graphit(name,tensor):
 
 def problem6():
       
+    print("Problem #6 - graphs created")
     graphit("graphs/x",Tensors().x())
     graphit("graphs/s",Tensors().s())
     graphit("graphs/r",Tensors().r())
     graphit("graphs/y",Tensors().y())
+
+def is_associative(a,b,c):
+    x = tf.multiply(a,tf.add(b,c))
+    y = tf.add(tf.multiply(a,b),tf.multiply(a,c))
+    return (run(x) == run(y)).all()
+
+def is_distributive(a,b,c):
+    x = tf.multiply(tf.multiply(a,b) ,c)
+    y = tf.multiply(a,tf.multiply(b,c))
+    return (run(x) == run(y)).all()
+
+def problem7():
+    a = tf.constant([[4,-2,1],[6,8,-5],[7,9,10]])
+    b = tf.constant([[6,9,-4],[7,5,3],[-8,2,1]])
+    c = tf.constant([[-4,-5,2],[10,6,1],[3,-9,8]])
+    print("Problem #7 - graphs created")
+    print("\tSatisfies the associative property",is_associative(a,b,c))
+    print("\tSatisfies the distributive property",is_distributive(a,b,c))
 
 def main():
     problem1()
@@ -87,6 +108,7 @@ def main():
     problem4()
     problem5()
     problem6()
+    problem7()
 
 if __name__ == "__main__":
     main()
