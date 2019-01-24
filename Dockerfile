@@ -5,6 +5,7 @@ RUN apt install -y python3-pip
 RUN apt install -y vim
 RUN apt install -y git
 RUN apt install -y sudo
+RUN apt-get install net-tools
 RUN apt install -y curl git-core gcc make zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libssl-dev
 #
 RUN git config --global user.email "thomaswhitcomb@gmail.com"
@@ -26,4 +27,5 @@ RUN pip3 install Scikit-Learn
 RUN pip3 install Seaborn
 RUN pip3 install SymPy
 
+COPY bashrc /root/.bashrc
 RUN python3 -c "import tensorflow as tf; print(tf.__version__)"
