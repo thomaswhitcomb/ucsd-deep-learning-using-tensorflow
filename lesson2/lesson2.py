@@ -1,4 +1,5 @@
 import tensorflow as tf
+import sys
 
 class Tensors:
     def __init__(self):
@@ -32,13 +33,19 @@ class Tensors:
             print("Tensors - y s bad: ", run(self.dag_y()).item())
       
 
-def problem1():
+def problem1_setup():
     tensor_x = tf.constant(list(range(100, 110)))
     tensor_y = tf.constant([34, 28, 45, 67, 89, 93, 24, 49, 11, 7])
-    tensor_sum = tf.add(tensor_x, tensor_y)
-    print("Problem #1")
-    print("\tLazy", tensor_sum)
-    print("\tEager", run(tensor_sum))
+    return tf.add(tensor_x, tensor_y)
+
+def problem1():
+    dag = problem1_setup()
+    print("Problem #1: - lazy sum is ", run(dag))
+
+def problem1_eager():
+    tf.enable_eager_execution()
+    answer = problem1_setup()
+    print("Problem #1: - eager sum is ", answer)
 
 def problem2():
     x = tf.constant([[1, 2, 3, 4], [5, 6, 7, 8]])
@@ -111,4 +118,11 @@ def main():
     problem7()
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) ==  2 and sys.argv[1] == "eager":
+        tf.enable_eager_execution()
+        problem1_eager()
+    else:
+        if len(sys.argv) == 1:
+            main()
+        else: 
+            print("Usage: lesson2 [eager]")
