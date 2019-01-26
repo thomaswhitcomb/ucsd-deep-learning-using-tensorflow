@@ -11,16 +11,25 @@ class Tensors:
         self.f = tf.constant(19.83, name="f")
 
     def dag_x(self):
-         return (tf.add(tf.constant(1.0), tf.add(tf.divide(self.a, self.b), tf.divide(self.c, (tf.square(self.f))))))
+         return tf.add(tf.constant(1.0), 
+                       tf.add(tf.divide(self.a, self.b), 
+                              tf.divide(self.c, (tf.square(self.f)))))
 
     def dag_s(self):
-        return tf.divide(tf.subtract(self.b, self.a) , tf.subtract(self.d, self.c))
+        return tf.divide(tf.subtract(self.b, self.a), 
+                         tf.subtract(self.d, self.c))
 
     def dag_r(self):
-        return tf.divide(1.0 , (tf.divide(1.0, self.a)+tf.divide(1.0, self.b)+tf.divide(1.0, self.c)+tf.divide(1.0, self.d)))
+        return tf.divide(1.0, 
+                         tf.add(tf.divide(1.0, self.a),
+                                tf.add(tf.divide(1.0,self.b),
+                                       tf.add(tf.divide(1.0,self.c), 
+                                              tf.divide(1.0,self.d)))))
 
     def dag_y(self):
-        return tf.multiply( self.a, self.b)*tf.divide(1.0, self.c)*tf.multiply(self.f, tf.divide(self.f, 2))
+        return tf.multiply(tf.multiply(self.a, self.b),
+               tf.multiply(tf.divide(1.0, self.c),
+               tf.multiply(self.f, tf.divide(self.f, 2))))
 
     def test(self):
         if run(self.dag_x()).item() != 1.4804635047912598:
