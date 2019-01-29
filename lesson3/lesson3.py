@@ -16,18 +16,18 @@ def compute(inputs,weights,bias,activation_fn):
 
 def problem1():
     inputs = tf.constant([[100,150]])
+    weights = tf.constant([[5,10,15,20],[25,30,35,40]])
+    bias = tf.constant([[17,19,21,23]])
+    activation,l1 = compute(inputs,weights,bias,y_equal_x)
 
-    layer1Weights = tf.constant([[5,10,15,20],[25,30,35,40]])
-    layer1Bias = tf.constant([[17,19,21,23]])
-    layer2Weights = tf.constant([[30,35],[40,45],[70,75],[80,85]])
-    layer2Bias = tf.constant([[35,36]])
-
-    activation,l1 = compute(inputs,layer1Weights,layer1Bias,y_equal_x)
-    activation,l2 = compute(activation,layer2Weights,layer2Bias,y_equal_x)
+    weights = tf.constant([[30,35],[40,45],[70,75],[80,85]])
+    bias = tf.constant([[35,36]])
+    activation,l2 = compute(activation,weights,bias,y_equal_x)
     return run(l2)
 
 def problem2():
-    inputs = tf.constant([[0.,0.],[1.,0.],[0.,1.],[1.,1.]])
+    c = [([0.,0.],0),([1.,0.],1),([0.,1.],1),([1.,1.],0)]
+    inputs = tf.constant([a[0] for a in c])
     weights = tf.constant([[-4.,-6.,-5.],[3.,6.,4.]])
     bias = tf.constant([[-2.,3.,-2.]])
     activation,l = compute(inputs,weights,bias,tf.sigmoid)
@@ -35,7 +35,14 @@ def problem2():
     weights = tf.constant([[5.],[-9.],[7.]])
     bias = tf.constant([4.])
     activation,l = compute(activation,weights,bias,tf.sigmoid)
-    return run(activation)
+    results = run(activation)
+    table = []
+    x = 0
+    for row in c:
+      r = [row[0][0],row[0][1],row[1],results[x][0],(results[x][0]-row[1])**2]
+      table.append(r)
+      x = x + 1
+    return table
    
 def main():
     print(problem1())
