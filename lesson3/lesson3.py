@@ -1,5 +1,4 @@
 import tensorflow as tf
-import sys
 
 def run(tensor):
     with tf.Session() as sess:
@@ -13,8 +12,6 @@ def compute(inputs, weights, bias, activation_fn):
     layer = tf.matmul(inputs, weights)+bias
     return activation_fn(layer), layer
 
-##### P R O B L E M 1 ##########
-
 def problem1():
     inputs = tf.constant([[100, 150]])
     weights = tf.constant([[5, 10, 15, 20], [25, 30, 35, 40]])
@@ -25,8 +22,6 @@ def problem1():
     bias = tf.constant([[35, 36]])
     _, l2 = compute(activation, weights, bias, y_equal_x)
     return run(l2)
-
-##### P R O B L E M 2 ##########
 
 def problem2():
     c = [([0., 0.], 0), ([1., 0.], 1), ([0., 1.], 1), ([1., 1.], 0)]
