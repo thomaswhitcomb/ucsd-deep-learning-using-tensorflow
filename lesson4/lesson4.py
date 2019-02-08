@@ -9,9 +9,58 @@ def cost1(target,compValue):
 
 def cost2(target,compValue):
     return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=target, logits=compValue))
+
 def cost3(target,compValue):
     return tf.reduce_mean(tf.pow(target - compValue,2))
 
+class NN:
+    def __init__(self):
+        RANDOM_SEED = 42
+        tf.set_random_seed(RANDOM_SEED)
+
+    def cost1(target,compValue):
+        return tf.reduce_mean(-target*tf.log(compValue) - (1-target)*tf.log(1-compValue))
+
+    def cost2(target,compValue):
+        return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=target, logits=compValue))
+
+
+    def initialize(self,features,labels):
+        input_shape = features.shape[1]
+        out_shape = labels.shape[1]
+        Inputs = tf.placeholder(tf.float32, shape=[None, input_shape])
+        Outputs = tf.placeholder(tf.float32, shape=[None, out_shape])
+        Y = tf.placeholder(tf.float32, shape=[None, out_shape])
+        Learning_rate = tf.placeholder(tf.float32)
+    
+        W1 = tf.get_variable(name="W1",
+                shape=[input_shape, p_hidden],
+                initializer=p_initializer())
+        B1 = tf.get_variable(name="B1",
+                shape=[p_hidden],
+                initializer=tf.constant_initializer(0.0))
+        H1 = p_activation_fn(tf.matmul(Inputs, W1) + B1)
+
+        W2 = tf.get_variable(name="W2",
+                shape=[p_hidden, out_shape],
+                initializer=p_initializer())
+        B2 = tf.get_variable(name="B2",
+                shape=[out_shape],
+                initializer=tf.constant_initializer(0.0))
+
+        O1wo = tf.matmul(H1, W2) + B2
+        O1 = p_activation_fn(O1wo)
+        #O1 = tf.matmul(H1, W2) + B2
+        n_axis = 1
+        predict = tf.argmax(O1, axis=n_axis)
+        predict2 = O1
+        correct_prediction = tf.equal(tf.argmax(O1,axis=n_axis), tf.argmax(Y,axis=n_axis))
+        accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+        cost = p_cost_fn(Outputs,O1)
+        updates = tf.train.GradientDescentOptimizer(Learning_rate).minimize(cost)
+
+        train_features,test_features,train_labels,test_labels = train_test_split(
+             features, labels,test_size=p_test_size ,random_state=RANDOM_SEED)
 
 def train(features,labels,p_hidden,p_cost_fn=cost1,p_activation_fn=tf.nn.relu,p_epochs=100,p_learning_rate=0.1,p_test_size=0.0,p_initializer=tf.initializers.random_uniform):
     RANDOM_SEED = 42
