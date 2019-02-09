@@ -14,8 +14,8 @@ def cost3(target,compValue):
     return tf.reduce_mean(tf.pow(target - compValue,2))
 
 class NN:
+    RANDOM_SEED = 42
     def __init__(self):
-        RANDOM_SEED = 42
         tf.set_random_seed(RANDOM_SEED)
 
     def cost1(target,compValue):
@@ -24,10 +24,13 @@ class NN:
     def cost2(target,compValue):
         return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=target, logits=compValue))
 
+    def initialize(self,features,labels,hidden):
+        self.features = features
+        self.labels = labels
+        self.hidden = hidden
 
-    def initialize(self,features,labels):
-        input_shape = features.shape[1]
-        out_shape = labels.shape[1]
+        input_shape = self.features.shape[1]
+        out_shape = self.labels.shape[1]
         Inputs = tf.placeholder(tf.float32, shape=[None, input_shape])
         Outputs = tf.placeholder(tf.float32, shape=[None, out_shape])
         Y = tf.placeholder(tf.float32, shape=[None, out_shape])
@@ -56,11 +59,23 @@ class NN:
         predict2 = O1
         correct_prediction = tf.equal(tf.argmax(O1,axis=n_axis), tf.argmax(Y,axis=n_axis))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-        cost = p_cost_fn(Outputs,O1)
-        updates = tf.train.GradientDescentOptimizer(Learning_rate).minimize(cost)
+        self.cost = p_cost_fn(Outputs,O1)
+        self.updates = tf.train.GradientDescentOptimizer(Learning_rate).minimize(cost)
 
+    def train(self,tsize,epochs):
         train_features,test_features,train_labels,test_labels = train_test_split(
-             features, labels,test_size=p_test_size ,random_state=RANDOM_SEED)
+             self.features, self.labels,test_size=tsize ,random_state=RANDOM_SEED)
+        with tf.Session() as sess:
+            init = tf.global_variables_initializer()
+            sess.run(init)
+            for epoch in range(epochs):
+                # Train with each example
+                for i in range(len(train_features)):
+                    op,cst = sess.run([self.updates,self.cost], feed_dict={Inputs: train_features[i: i + 1], Outputs: train_labels[i: i + 1],Learning_rate:p_learning_rate})
+                test_accuracy = np.mean(np.argmax(test_labels, axis=n_axis) == sess.run(predict, feed_dict={Inputs: test_features, Outputs: test_labels}))
+                test_accuracy1 = sess.run(accuracy,feed_dict={Inputs:test_features,Y:test_labels})
+                if (epoch % (p_epochs/10)) == 0:
+                    print("Epoch: %d, acc: %.5f,acc: %.5f, cost: %.5f" % (epoch, test_accuracy,test_accuracy1, cst))
 
 def train(features,labels,p_hidden,p_cost_fn=cost1,p_activation_fn=tf.nn.relu,p_epochs=100,p_learning_rate=0.1,p_test_size=0.0,p_initializer=tf.initializers.random_uniform):
     RANDOM_SEED = 42
