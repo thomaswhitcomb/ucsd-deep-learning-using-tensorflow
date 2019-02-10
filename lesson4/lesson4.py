@@ -2,6 +2,8 @@ import tensorflow as tf
 from sklearn.model_selection import train_test_split
 import numpy as np
 from sklearn import datasets
+from sklearn import preprocessing
+import pandas as pd
 import sys
 
 class Graph:
@@ -126,11 +128,11 @@ def problem2():
     labels_scaled = labels/labels.max()
     g = Graph2()
     g.initialize(features_scaled,labels_scaled,5)
-    g.train(0.33,5000,0.01)
+    g.train(0.30,500,0.01)
 
 def main():
-    problem1()
-    #problem2()
+    #problem1()
+    problem2()
 
 if __name__ == "__main__":
     main()
