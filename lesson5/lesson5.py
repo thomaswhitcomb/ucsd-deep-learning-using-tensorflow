@@ -10,21 +10,19 @@ class Problem1():
 
     def create_dataset(self):
         n_samples = 30
-        x = np.linspace(0,20,n_samples)
-        self.train_x = np.reshape(x,(len(x),1))
+        self.train_x = np.linspace(0,20,n_samples)
         self.train_y = 3.7 * self.train_x + 14 + 4 * np.random.randn(n_samples)
         plt.plot(self.train_x, self.train_y,'o')
         plt.savefig("lesson5.png")
-        print(self.train_x)
-        print(self.train_y)
 
     def compute_regression(self):
         linreg = linear_model.LinearRegression()
-        #print("train_x",self.train_x.shape)
-        #print("train_y",self.train_y.shape)
-        linreg.fit(self.train_x,self.train_y)
-        print(linreg.intercept_)
-        print(linreg.coef_)
+        self.train_x = np.reshape(self.train_x,(len(self.train_x),1))
+        print("train_x",self.train_x.shape,self.train_x)
+        print("train_y",self.train_y.shape,self.train_y)
+        linreg.fit(self.train_x,self.train_y,self.train_y)
+        print("intercept",linreg.intercept_)
+        print("slope",linreg.coef_)
 
 
 
