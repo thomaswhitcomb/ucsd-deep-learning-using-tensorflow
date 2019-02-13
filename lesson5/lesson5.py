@@ -2,11 +2,27 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn import linear_model
-
-class Problem1():
+class Graph1():
     def __init__(self):
-        self.RANDOM_SEED = 42
-        tf.set_random_seed(self.RANDOM_SEED)
+        self.graph = tf.Graph()
+    def build(self):
+        with self.graphr.as_Default():
+            _slope = tf.Variable(tf.random_uniform([1],-1.0,1.0))
+            _intercept = tf.Variable(tf.zeros([1]))
+            _response = _slope*x_point + intercept
+            self._cost = tf.reduce_mean(tf.square(_response - y_point))
+            self._optimizer = tf.train.GradientDescentOptimizer(0.5).minimize(cost)
+    @property
+    def cost(self):
+        return self._cost
+    @property
+    def optimizer(self):
+        return self._optimizer
+
+
+class Problem1SK():
+    def __init__(self):
+        pass
 
     def create_dataset(self):
         n_samples = 30
@@ -24,13 +40,34 @@ class Problem1():
         print("intercept",linreg.intercept_)
         print("slope",linreg.coef_)
 
+class Problem1TF():
+    def __init__(self):
+        self.RANDOM_SEED = 42
+        tf.set_random_seed(self.RANDOM_SEED)
 
+    def create_dataset(self):
+        number_of_points = 500
+        self.x_point = []
+        self.y_point = []
+        m = 0.22
+        c = 0.78
+        for i in range(number_of_points):
+            x = np.random.normal (0.0, 0.5)
+            y = m*x + c + np.random.normal(0.0,0.1)
+            self.x_point.append([x])
+            self.y_point.append([y])
 
+    def compute_regression(self):
+        init = tf.global_variables_initializer()
+        session.run(init)
+        for epoch in range(30):
+            session.run(optimizer)
+            if (epoch % 5) == 0:
 
 def main():
     problem1 = Problem1()
     problem1.create_dataset()
-    problem1.compute_regression()
+    problem1.compute_regression_with_sklearn()
 
 if __name__ == "__main__":
     main()
