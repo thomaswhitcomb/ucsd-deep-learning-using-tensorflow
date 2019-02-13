@@ -116,15 +116,17 @@ def problem1():
     f.readline()
     dataset = np.genfromtxt(fname = f, delimiter = ',')
     features = dataset[:,1:] # antecedents
-    features_scaled = features/features.max(axis=0)
+    featuresMin = features.min(axis=0)
+    featuresMax = features.max(axis=0)
+    features_scaled = (features-featuresMin)/(featuresMax-featuresMin)
     labels = dataset[:,:1]  # consequent
     one_hot = np.zeros(shape=(len(labels),2))
     for i in range(0,len(labels)):
         one_hot[i,int(labels[i])] = 1
 
     g = Graph1()
-    g.initialize(features_scaled,one_hot,4)
-    g.train(0.30,500,0.01)
+    g.initialize(features_scaled,one_hot,2)
+    g.train(0.30,250,0.01)
 
 def problem2():
     f = open("Advertising.csv")
@@ -132,15 +134,19 @@ def problem2():
     dataset = np.genfromtxt(fname = f, delimiter = ',')
     features = dataset[:,1:4] # antecedents
     labels = dataset[:,4:]  # consequent
-    features_scaled = features/features.max(axis=0)
-    labels_scaled = labels/labels.max()
+    featuresMin = features.min(axis=0)
+    featuresMax = features.max(axis=0)
+    features_scaled = (features-featuresMin)/(featuresMax-featuresMin)
+    labelsMin = labels.min(axis=0)
+    labelsMax = labels.max(axis=0)
+    labels_scaled = (labels-labelsMin)/(labelsMax-labelsMin)
     g = Graph2()
     g.initialize(features_scaled,labels_scaled,5)
     g.train(0.30,500,0.01)
 
 def main():
-    #problem1()
-    problem2()
+    problem1()
+    #problem2()
 
 if __name__ == "__main__":
     main()
