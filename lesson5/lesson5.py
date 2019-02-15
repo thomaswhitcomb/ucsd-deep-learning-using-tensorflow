@@ -68,7 +68,28 @@ class Problem1TF(Problem1Base):
             print("Epoch:", epoch , "Cost:", c, "Slope:", session.run(self.slope), "Intercept:", session.run(self.intercept))
             return c,session.run(self.slope),session.run(self.intercept)
 
+class Problem2Base():
+    def __init__(self):
+        pass
+
+    def create_dataset(self):
+        f = open("00 kc_house_data.csv")
+        f.readline()
+        dataset = np.genfromtxt(fname = f, delimiter = ',',usecols=(2,3,5))
+        print(dataset[:5,:])
+        predictors = dataset[:,1:3] 
+        print(predictors[:5,:])
+        response = dataset[:,0:1]
+        print(response[:5,:])
+
+class Problem2SK(Problem2Base):
+    def __init__(self):
+        pass
+
 def main():
+    problem2 = Problem2SK()
+    problem2.create_dataset()
+    sys.exit()
     problem1 = Problem1SK()
     problem1.create_dataset()
     slope,intercept = problem1.compute_regression()
