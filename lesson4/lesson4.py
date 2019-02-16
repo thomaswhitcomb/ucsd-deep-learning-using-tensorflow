@@ -131,8 +131,8 @@ def problem2():
     g.train(0.30,500,0.01)
 
 def main():
-    #problem1()
-    problem2()
+    problem1()
+    #problem2()
 
 if __name__ == "__main__":
     main()
