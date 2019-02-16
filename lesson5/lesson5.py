@@ -77,20 +77,20 @@ class Problem2Base():
         f.readline()
         dataset = np.genfromtxt(fname = f, delimiter = ',',usecols=(2,3,5))
         #print(dataset[:5,:])
-        predictors = dataset[:,1:3] 
-        #print(predictors[:5,:])
-        predictorsMin = predictors.min(axis=0)
-        predictorsMax = predictors.max(axis=0)
-        self.predictors_scaled = (predictors-predictorsMin)/(predictorsMax-predictorsMin)
-        print("predictors scaled",self.predictors_scaled[:5,:])
-        print("predictors scaled col1",self.predictors_scaled[:5,0:1])
-        print("predictors scaled col2",self.predictors_scaled[:5,1:2])
-        response = dataset[:,0:1]
-        #print("response",response[:5,:])
-        responseMin = response.min(axis=0)
-        responseMax = response.max(axis=0)
-        self.response_scaled = (response-responseMin)/(responseMax-responseMin)
-        print("response scaled",self.response_scaled[:5,:])
+        self.predictors = dataset[:,1:3] 
+        #print(self.predictors[:5,:])
+        predictorsMin = self.predictors.min(axis=0)
+        predictorsMax = self.predictors.max(axis=0)
+        self.predictors_scaled = (self.predictors-predictorsMin)/(predictorsMax-predictorsMin)
+        #print("predictors scaled",self.predictors_scaled[:5,:])
+        #print("predictors scaled col1",self.predictors_scaled[:5,0:1])
+        #print("predictors scaled col2",self.predictors_scaled[:5,1:2])
+        self.response = dataset[:,0:1]
+        #print("response",self.response[:5,:])
+        responseMin = self.response.min(axis=0)
+        responseMax = self.response.max(axis=0)
+        self.response_scaled = (self.response-responseMin)/(responseMax-responseMin)
+        #print("response scaled",self.response_scaled[:5,:])
 
 class Problem2SK(Problem2Base):
     def __init__(self):
@@ -99,7 +99,6 @@ class Problem2SK(Problem2Base):
 
     def compute_regression(self):
         linreg = linear_model.LinearRegression()
-        #self.x_point = np.reshape(self.x_point,(len(self.x_point),1))
         linreg.fit(self.predictors_scaled,self.response_scaled)
         return linreg.coef_,linreg.intercept_
 
@@ -128,25 +127,26 @@ class Problem2TF(Problem2Base):
         with tf.Session() as session:
             session.run(init)
             for epoch in range(epochs):
-                session.run(self.optimizer,feed_dict = {self.LR: learning_rate,self.X1:self.response_scaled[:,0:1],self.X2:self.response_scaled[:,1:2],self.Y:self.response_scaled})
-                if not epoch % 10000:
-                    c = session.run(self.cost, feed_dict = {self.LR:learning_rate,self.X1:self.response_scaled[:,0:1],self.X2:self.response_scaled[:,1:2],self.Y:self.response_scaled})
+                session.run(self.optimizer,feed_dict = {self.LR: learning_rate,self.X1:self.predictors_scaled[:,0:1],self.X2:self.predictors_scaled[:,1:2],self.Y:self.response_scaled})
+                if not epoch % 100000:
+                    c = session.run(self.cost, feed_dict = {self.LR:learning_rate,self.X1:self.predictors_scaled[:,0:1],self.X2:self.predictors_scaled[:,1:2],self.Y:self.response_scaled})
                     print("Epoch:", epoch , "Cost:", c, "Slope1:", session.run(self.slope1),"Slope2:",session.run(self.slope2), "Intercept:", session.run(self.intercept))
-            c = session.run(self.cost, feed_dict = {self.LR: learning_rate,self.X1 : self.response_scaled[:,0:1],self.X2 : self.response_scaled[:,1:2], self.Y : self.response_scaled} )
+            c = session.run(self.cost, feed_dict = {self.LR: learning_rate,self.X1 : self.predictors_scaled[:,0:1],self.X2 : self.predictors_scaled[:,1:2], self.Y : self.response_scaled} )
             print("Epoch:", epoch , "Cost:", c, "Slope1:", session.run(self.slope1),"Slope2:",session.run(self.slope2), "Intercept:", session.run(self.intercept))
             return c,session.run(self.slope1),session.run(self.slope2),session.run(self.intercept)
 
 
 def main():
-    problem2 = Problem2TF()
-    problem2.create_dataset()
-    problem2.build()
-    cost,slope1,slope2,intercept = problem2.compute_regression(500000,0.00001)
-    sys.exit()
     problem2 = Problem2SK()
     problem2.create_dataset()
     slope,intercept = problem2.compute_regression()
     print(slope,intercept)
+
+    problem2 = Problem2TF()
+    problem2.create_dataset()
+    problem2.build()
+    cost,slope1,slope2,intercept = problem2.compute_regression(500000,0.01)
+    sys.exit()
     problem1 = Problem1SK()
     problem1.create_dataset()
     slope,intercept = problem1.compute_regression()
