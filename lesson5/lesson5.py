@@ -81,22 +81,31 @@ class Problem2Base():
         print(predictors[:5,:])
         predictorsMin = predictors.min(axis=0)
         predictorsMax = predictors.max(axis=0)
-        predictors_scaled = (predictors-predictorsMin)/(predictorsMax-predictorsMin)
-        print("predictors scaled",predictors_scaled[:5,:])
+        self.predictors_scaled = (predictors-predictorsMin)/(predictorsMax-predictorsMin)
+        print("predictors scaled",self.predictors_scaled[:5,:])
         response = dataset[:,0:1]
         print("response",response[:5,:])
         responseMin = response.min(axis=0)
         responseMax = response.max(axis=0)
-        response_scaled = (response-responseMin)/(responseMax-responseMin)
-        print("response scaled",response_scaled[:5,:])
+        self.response_scaled = (response-responseMin)/(responseMax-responseMin)
+        print("response scaled",self.response_scaled[:5,:])
 
 class Problem2SK(Problem2Base):
     def __init__(self):
-        pass
+        self.RANDOM_SEED = 42
+        np.random.seed(self.RANDOM_SEED) 
+
+    def compute_regression(self):
+        linreg = linear_model.LinearRegression()
+        self.x_point = np.reshape(self.x_point,(len(self.x_point),1))
+        linreg.fit(self.predictors_scaled,self.response_scaled)
+        return linreg.coef_,linreg.intercept_
 
 def main():
     problem2 = Problem2SK()
     problem2.create_dataset()
+    slope,intercept = problem2.compute_regression()
+    print(slope,intercept)
     sys.exit()
     problem1 = Problem1SK()
     problem1.create_dataset()
