@@ -76,15 +76,17 @@ class Problem2Base():
         f = open("00 kc_house_data.csv")
         f.readline()
         dataset = np.genfromtxt(fname = f, delimiter = ',',usecols=(2,3,5))
-        print(dataset[:5,:])
+        #print(dataset[:5,:])
         predictors = dataset[:,1:3] 
-        print(predictors[:5,:])
+        #print(predictors[:5,:])
         predictorsMin = predictors.min(axis=0)
         predictorsMax = predictors.max(axis=0)
         self.predictors_scaled = (predictors-predictorsMin)/(predictorsMax-predictorsMin)
         print("predictors scaled",self.predictors_scaled[:5,:])
+        print("predictors scaled col1",self.predictors_scaled[:5,0:1])
+        print("predictors scaled col2",self.predictors_scaled[:5,1:2])
         response = dataset[:,0:1]
-        print("response",response[:5,:])
+        #print("response",response[:5,:])
         responseMin = response.min(axis=0)
         responseMax = response.max(axis=0)
         self.response_scaled = (response-responseMin)/(responseMax-responseMin)
@@ -97,16 +99,54 @@ class Problem2SK(Problem2Base):
 
     def compute_regression(self):
         linreg = linear_model.LinearRegression()
-        self.x_point = np.reshape(self.x_point,(len(self.x_point),1))
+        #self.x_point = np.reshape(self.x_point,(len(self.x_point),1))
         linreg.fit(self.predictors_scaled,self.response_scaled)
         return linreg.coef_,linreg.intercept_
 
+class Problem2TF(Problem2Base):
+    def __init__(self):
+        self.RANDOM_SEED = 42
+        tf.set_random_seed(self.RANDOM_SEED)
+        np.random.seed(self.RANDOM_SEED) 
+
+    def build(self):
+        self.X1 = tf.placeholder(tf.float32)
+        self.X2 = tf.placeholder(tf.float32)
+        self.Y = tf.placeholder(tf.float32)
+
+        self.LR = tf.placeholder(tf.float32)
+
+        self.slope1 = tf.Variable([0],dtype=tf.float32,name="weight1")
+        self.slope2 = tf.Variable([0],dtype=tf.float32,name="weight2")
+        self.intercept = tf.Variable(tf.zeros([1]),dtype=tf.float32,name="bias")
+        self.response = self.slope1*self.X1 + self.slope2*self.X2 + self.intercept
+        self.cost = tf.reduce_mean(tf.square(self.response - self.Y))
+        self.optimizer = tf.train.GradientDescentOptimizer(self.LR).minimize(self.cost)
+
+    def compute_regression(self,epochs,learning_rate):
+        init = tf.global_variables_initializer()
+        with tf.Session() as session:
+            session.run(init)
+            for epoch in range(epochs):
+                session.run(self.optimizer,feed_dict = {self.LR: learning_rate,self.X1:self.response_scaled[:,0:1],self.X2:self.response_scaled[:,1:2],self.Y:self.response_scaled})
+                if not epoch % 10000:
+                    c = session.run(self.cost, feed_dict = {self.LR:learning_rate,self.X1:self.response_scaled[:,0:1],self.X2:self.response_scaled[:,1:2],self.Y:self.response_scaled})
+                    print("Epoch:", epoch , "Cost:", c, "Slope1:", session.run(self.slope1),"Slope2:",session.run(self.slope2), "Intercept:", session.run(self.intercept))
+            c = session.run(self.cost, feed_dict = {self.LR: learning_rate,self.X1 : self.response_scaled[:,0:1],self.X2 : self.response_scaled[:,1:2], self.Y : self.response_scaled} )
+            print("Epoch:", epoch , "Cost:", c, "Slope1:", session.run(self.slope1),"Slope2:",session.run(self.slope2), "Intercept:", session.run(self.intercept))
+            return c,session.run(self.slope1),session.run(self.slope2),session.run(self.intercept)
+
+
 def main():
+    problem2 = Problem2TF()
+    problem2.create_dataset()
+    problem2.build()
+    cost,slope1,slope2,intercept = problem2.compute_regression(500000,0.00001)
+    sys.exit()
     problem2 = Problem2SK()
     problem2.create_dataset()
     slope,intercept = problem2.compute_regression()
     print(slope,intercept)
-    sys.exit()
     problem1 = Problem1SK()
     problem1.create_dataset()
     slope,intercept = problem1.compute_regression()
