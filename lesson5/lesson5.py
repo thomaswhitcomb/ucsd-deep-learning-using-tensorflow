@@ -145,7 +145,7 @@ def main():
     problem2 = Problem2TF()
     problem2.create_dataset()
     problem2.build()
-    cost,slope1,slope2,intercept = problem2.compute_regression(500000,0.01)
+    cost,slope1,slope2,intercept = problem2.compute_regression(1000000,0.01)
     sys.exit()
     problem1 = Problem1SK()
     problem1.create_dataset()

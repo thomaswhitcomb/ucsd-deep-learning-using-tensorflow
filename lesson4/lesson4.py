@@ -60,19 +60,19 @@ class Graph:
         self.updates = tf.train.GradientDescentOptimizer(self.Learning_rate).minimize(self.cost)
 
     def train(self,tsize,epochs,lr):
-        n_axis = 1
         train_features,test_features,train_labels,test_labels = train_test_split(
              self.features, self.labels,test_size=tsize ,random_state=self.random_seed())
         with tf.Session() as sess:
             init = tf.global_variables_initializer()
             sess.run(init)
-            for epoch in range(epochs):
+            for epoch in range(epochs+1):
                 # Train with each example
                 for i in range(len(train_features)):
                     op,cst = sess.run([self.updates,self.cost], feed_dict={self.Inputs: train_features[i: i + 1], self.Outputs: train_labels[i: i + 1],self.Learning_rate:lr})
-                test_accuracy = self.calc_accuracy(sess,test_features,test_labels)
-                if (epoch % (epochs/10)) == 0:
+                if (epoch % (epochs/20)) == 0:
+                    test_accuracy = self.calc_accuracy(sess,test_features,test_labels)
                     print("Epoch: %d, acc: %.5f, cost: %.5f" % (epoch, test_accuracy, cst))
+            return test_accuracy,cst
 
 class Graph1(Graph):
     def cost_calc(self):
@@ -102,37 +102,46 @@ class Graph2(Graph):
         xx1 = np.stack(labels,axis=0)
         xx2 = np.stack(sess.run(self.O1,feed_dict={self.Inputs:features,self.TestOutputs:labels}),axis=0)
         return sess.run(tf.sqrt(tf.reduce_mean(tf.square(tf.subtract(xx1,xx2)))))
-
-def problem1():
+def problem1(epochs,learning_rate,hidden):
     f = open("Admissions.csv")
     f.readline()
     dataset = np.genfromtxt(fname = f, delimiter = ',')
     features = dataset[:,1:] # antecedents
-    features_scaled = features/features.max(axis=0)
-    labels = dataset[:,:1]  # consequent
+    featuresMin = features.min(axis=0)
+    featuresMax = features.max(axis=0)
+    features_scaled = (features-featuresMin)/(featuresMax-featuresMin)
+    labels = dataset[:,0:1]  # consequent
     one_hot = np.zeros(shape=(len(labels),2))
     for i in range(0,len(labels)):
         one_hot[i,int(labels[i])] = 1
 
     g = Graph1()
-    g.initialize(features_scaled,one_hot,4)
-    g.train(0.30,500,0.01)
+    g.initialize(features_scaled,one_hot,hidden)
+    return g.train(0.30,epochs,learning_rate)
 
 def problem2():
     f = open("Advertising.csv")
     f.readline()
     dataset = np.genfromtxt(fname = f, delimiter = ',')
     features = dataset[:,1:4] # antecedents
+    featuresMin = features.min(axis=0)
+    featuresMax = features.max(axis=0)
+    features_scaled = (features-featuresMin)/(featuresMax-featuresMin)
     labels = dataset[:,4:]  # consequent
-    features_scaled = features/features.max(axis=0)
-    labels_scaled = labels/labels.max()
+    labelsMin = labels.min(axis=0)
+    labelsMax = labels.max(axis=0)
+    labels_scaled = (labels-labelsMin)/(labelsMax-labelsMin)
     g = Graph2()
     g.initialize(features_scaled,labels_scaled,5)
-    g.train(0.30,500,0.01)
+    return g.train(0.30,500,0.01)
 
 def main():
-    #problem1()
-    problem2()
+    #accuracy,cost = problem1(225,0.01,2)
+    accuracy,cost = problem1(500,0.1,7)
+    assert ("%.5f" % accuracy) == "0.75000"
+    print(cost)
+    assert ("%.5f" % cost) == "0.11933"
+    #problem2()
 
 if __name__ == "__main__":
     main()
