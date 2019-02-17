@@ -37,21 +37,21 @@ class Graph:
         self.TestOutputs = tf.placeholder(tf.float32, shape=[None, out_shape])
         self.Learning_rate = tf.placeholder(tf.float32)
     
-        W1 = tf.get_variable(name="W1",
+        self.W1 = tf.get_variable(name="W1",
                 shape=[input_shape, hidden],
                 initializer=self.variable_initializer()())
-        B1 = tf.get_variable(name="B1",
+        self.B1 = tf.get_variable(name="B1",
                 shape=[hidden],
                 initializer=tf.constant_initializer(0.0))
-        H1 = self.activation_calc()(tf.matmul(self.Inputs, W1) + B1)
-        W2 = tf.get_variable(name="W2",
+        self.H1 = self.activation_calc()(tf.matmul(self.Inputs, self.W1) + self.B1)
+        self.W2 = tf.get_variable(name="W2",
                 shape=[hidden, out_shape],
                 initializer=self.variable_initializer()())
-        B2 = tf.get_variable(name="B2",
+        self.B2 = tf.get_variable(name="B2",
                 shape=[out_shape],
                 initializer=tf.constant_initializer(0.0))
 
-        self.O1 = self.activation_calc()(tf.matmul(H1, W2) + B2)
+        self.O1 = self.activation_calc()(tf.matmul(self.H1, self.W2) + self.B2)
 
         correct_prediction = tf.equal(tf.argmax(self.O1,axis=1), tf.argmax(self.TestOutputs,axis=1))
         self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
@@ -71,7 +71,13 @@ class Graph:
                     op,cst = sess.run([self.updates,self.cost], feed_dict={self.Inputs: train_features[i: i + 1], self.Outputs: train_labels[i: i + 1],self.Learning_rate:lr})
                 if (epoch % (epochs/20)) == 0:
                     test_accuracy = self.calc_accuracy(sess,test_features,test_labels)
-                    print("Epoch: %d, acc: %.5f, cost: %.5f" % (epoch, test_accuracy, cst))
+                    print("Epoch: %d, accuracy: %.5f, cost: %.5f" % (epoch, test_accuracy, cst))
+
+            print("W1: ",sess.run(self.W1))
+            print("B1: ",sess.run(self.B1))
+            print("W2: ",sess.run(self.W2))
+            print("B2: ",sess.run(self.B2))
+ 
             return test_accuracy,cst
 
 class Graph1(Graph):
@@ -102,6 +108,7 @@ class Graph2(Graph):
         xx1 = np.stack(labels,axis=0)
         xx2 = np.stack(sess.run(self.O1,feed_dict={self.Inputs:features,self.TestOutputs:labels}),axis=0)
         return sess.run(tf.sqrt(tf.reduce_mean(tf.square(tf.subtract(xx1,xx2)))))
+
 def problem1(epochs,learning_rate,hidden):
     f = open("Admissions.csv")
     f.readline()
@@ -119,7 +126,7 @@ def problem1(epochs,learning_rate,hidden):
     g.initialize(features_scaled,one_hot,hidden)
     return g.train(0.30,epochs,learning_rate)
 
-def problem2():
+def problem2(epochs,learning_rate,hidden):
     f = open("Advertising.csv")
     f.readline()
     dataset = np.genfromtxt(fname = f, delimiter = ',')
@@ -132,16 +139,14 @@ def problem2():
     labelsMax = labels.max(axis=0)
     labels_scaled = (labels-labelsMin)/(labelsMax-labelsMin)
     g = Graph2()
-    g.initialize(features_scaled,labels_scaled,5)
-    return g.train(0.30,500,0.01)
+    g.initialize(features_scaled,labels_scaled,hidden)
+    return g.train(0.30,epochs,learning_rate)
 
 def main():
-    #accuracy,cost = problem1(225,0.01,2)
-    accuracy,cost = problem1(500,0.1,7)
-    assert ("%.5f" % accuracy) == "0.75000"
-    print(cost)
-    assert ("%.5f" % cost) == "0.11933"
-    #problem2()
+    print("Problem 1")
+    problem1(375,0.1,9)
+    print("Problem 2")
+    problem2(500,0.01,5)
 
 if __name__ == "__main__":
     main()
