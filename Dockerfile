@@ -8,7 +8,7 @@ RUN apt install -y git
 RUN apt install -y sudo
 RUN apt-get install net-tools
 RUN apt install -y curl git-core gcc make zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libssl-dev
-RUN sudo apt-get install tmux
+RUN apt-get install -y tmux
 #
 RUN git config --global user.email "thomaswhitcomb@gmail.com"
 RUN git config --global user.name "Tom Whitcomb"
