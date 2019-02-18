@@ -74,7 +74,11 @@ class Graph:
 
     def train(self,tsize,epochs,lr):
         train_features,test_features,train_labels,test_labels = train_test_split(
-                self.features, self.labels,test_size=tsize ,random_state=self.random_seed())
+             self.features, 
+             self.labels,
+             test_size=tsize ,
+             random_state=self.random_seed())
+
         with tf.Session() as sess:
             init = tf.global_variables_initializer()
             sess.run(init)

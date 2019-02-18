@@ -1,5 +1,6 @@
 FROM ubuntu:latest 
 RUN apt update && apt upgrade -y 
+RUN apt install -y zsh
 RUN apt install -y python3
 RUN apt install -y python3-pip
 RUN apt install -y vim
@@ -26,6 +27,7 @@ RUN pip3 install Matplotlib
 RUN pip3 install Scikit-Learn
 RUN pip3 install Seaborn
 RUN pip3 install SymPy
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 COPY bashrc /root/.bashrc
 RUN python3 -c "import tensorflow as tf; print(tf.__version__)"
