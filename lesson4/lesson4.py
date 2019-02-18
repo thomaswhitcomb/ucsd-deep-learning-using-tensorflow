@@ -33,9 +33,15 @@ class Graph:
 
         input_shape = self.features.shape[1]
         out_shape = self.labels.shape[1]
-        self.inputs = tf.placeholder(tf.float32, shape=[None, input_shape])
-        self.output = tf.placeholder(tf.float32, shape=[None, out_shape])
-        self.test_outputss = tf.placeholder(tf.float32, shape=[None, out_shape])
+        self.inputs = tf.placeholder(
+                tf.float32, 
+                shape=[None, input_shape])
+        self.output = tf.placeholder(
+                tf.float32, 
+                shape=[None, out_shape])
+        self.test_outputss = tf.placeholder(
+                tf.float32, 
+                shape=[None, out_shape])
         self.learning_rate = tf.placeholder(tf.float32)
     
         self.w1 = tf.get_variable(name="w1",
@@ -44,7 +50,8 @@ class Graph:
         self.b1 = tf.get_variable(name="b1",
                 shape=[hidden],
                 initializer=tf.constant_initializer(0.0))
-        self.h1 = self.activation_calc()(tf.matmul(self.inputs, self.w1) + self.b1)
+        self.h1 = self.activation_calc()(
+                tf.matmul(self.inputs, self.w1) + self.b1)
         self.w2 = tf.get_variable(name="w2",
                 shape=[hidden, out_shape],
                 initializer=self.variable_initializer()())
@@ -52,13 +59,18 @@ class Graph:
                 shape=[out_shape],
                 initializer=tf.constant_initializer(0.0))
 
-        self.o1 = self.activation_calc()(tf.matmul(self.h1, self.w2) + self.b2)
+        self.o1 = self.activation_calc()(
+                tf.matmul(self.h1, self.w2) + self.b2)
 
-        correct_prediction = tf.equal(tf.argmax(self.o1,axis=1), tf.argmax(self.test_outputss,axis=1))
-        self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+        correct_prediction = tf.equal(
+                tf.argmax(self.o1,axis=1), 
+                tf.argmax(self.test_outputss,axis=1))
+        self.accuracy = tf.reduce_mean(
+                tf.cast(correct_prediction, tf.float32))
 
         self.cost = self.cost_calc()(self.output,self.o1)
-        self.updates = tf.train.GradientDescentOptimizer(self.learning_rate).minimize(self.cost)
+        self.updates = tf.train.GradientDescentOptimizer(
+                self.learning_rate).minimize(self.cost)
 
     def train(self,tsize,epochs,lr):
         train_features,test_features,train_labels,test_labels = train_test_split(
@@ -73,10 +85,16 @@ class Graph:
             for epoch in range(epochs+1):
                 # Train with each example
                 for i in range(len(train_features)):
-                    op,cst = sess.run([self.updates,self.cost], feed_dict={self.inputs: train_features[i: i + 1], self.output: train_labels[i: i + 1],self.learning_rate:lr})
+                    op,cst = sess.run([self.updates,self.cost], 
+                            feed_dict={self.inputs: train_features[i: i + 1], 
+                                self.output: train_labels[i: i + 1],
+                                self.learning_rate:lr})
                 if (epoch % (epochs/20)) == 0:
-                    test_accuracy = self.calc_accuracy(sess,test_features,test_labels)
-                    print("Epoch: %d, accuracy: %.5f, cost: %.5f" % (epoch, test_accuracy, cst))
+                    test_accuracy = self.calc_accuracy(
+                            sess,test_features,
+                            test_labels)
+                    print("Epoch: %d, accuracy: %.5f, cost: %.5f" % 
+                            (epoch, test_accuracy, cst))
 
             print("Weights Level 1:\n",sess.run(self.w1))
             print("Bias Level 1:\n",sess.run(self.b1))
@@ -88,19 +106,23 @@ class Graph:
 class Graph1(Graph):
     def cost_calc(self):
         def calculator(target,compValue):
-            return tf.reduce_mean(-target*tf.log(compValue) - (1-target)*tf.log(1-compValue))
+            return tf.reduce_mean(-target*tf.log(compValue) - 
+                    (1-target)*tf.log(1-compValue))
         return calculator
     def activation_calc(self):
         return tf.sigmoid
     def variable_initializer(self):
         return tf.contrib.layers.xavier_initializer
     def calc_accuracy(self,sess,features,labels):
-        return sess.run(self.accuracy,feed_dict={self.inputs:features,self.test_outputss:labels})
+        return sess.run(
+                self.accuracy,
+                feed_dict={self.inputs:features,self.test_outputss:labels})
 
 class Graph2(Graph):
     def cost_calc(self):
         def calculator(target,compValue):
-            return tf.reduce_mean(tf.pow(target - compValue,2))
+            return tf.reduce_mean(
+                    tf.pow(target - compValue,2))
         return calculator
 
     def activation_calc(self):
@@ -111,8 +133,16 @@ class Graph2(Graph):
 
     def calc_accuracy(self,sess,features,labels):
         xx1 = np.stack(labels,axis=0)
-        xx2 = np.stack(sess.run(self.o1,feed_dict={self.inputs:features,self.test_outputss:labels}),axis=0)
-        return sess.run(tf.sqrt(tf.reduce_mean(tf.square(tf.subtract(xx1,xx2)))))
+        xx2 = np.stack(
+                sess.run(self.o1,
+                    feed_dict={
+                        self.inputs:features,
+                        self.test_outputss:labels}),axis=0)
+        return sess.run(
+                tf.sqrt(
+                    tf.reduce_mean(
+                        tf.square(
+                            tf.subtract(xx1,xx2)))))
 
 def scale(t):
     tMin = t.min(axis=0)
