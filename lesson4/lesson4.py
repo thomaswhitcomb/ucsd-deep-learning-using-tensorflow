@@ -86,7 +86,8 @@ class Graph:
                 # Train with each example
                 for i in range(len(train_features)):
                     op,cst = sess.run([self.updates,self.cost], 
-                            feed_dict={self.inputs: train_features[i: i + 1], 
+                            feed_dict={
+                                self.inputs: train_features[i: i + 1], 
                                 self.output: train_labels[i: i + 1],
                                 self.learning_rate:lr})
                 if (epoch % (epochs/20)) == 0:
@@ -116,7 +117,9 @@ class Graph1(Graph):
     def calc_accuracy(self,sess,features,labels):
         return sess.run(
                 self.accuracy,
-                feed_dict={self.inputs:features,self.test_outputss:labels})
+                feed_dict={
+                    self.inputs:features,
+                    self.test_outputss:labels})
 
 class Graph2(Graph):
     def cost_calc(self):
