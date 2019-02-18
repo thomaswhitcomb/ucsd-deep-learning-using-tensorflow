@@ -74,10 +74,10 @@ class Graph:
                     test_accuracy = self.calc_accuracy(sess,test_features,test_labels)
                     print("Epoch: %d, accuracy: %.5f, cost: %.5f" % (epoch, test_accuracy, cst))
 
-            print("W1: ",sess.run(self.w1))
-            print("B1: ",sess.run(self.b1))
-            print("W2: ",sess.run(self.w2))
-            print("B2: ",sess.run(self.b2))
+            print("Weights Level 1:\n",sess.run(self.w1))
+            print("Bias Level 1:\n",sess.run(self.b1))
+            print("Weights Level 2:\n",sess.run(self.w2))
+            print("Bias Level 2:\n",sess.run(self.b2))
  
             return test_accuracy,cst
 
@@ -144,8 +144,10 @@ def problem2(epochs,learning_rate,hidden):
 
 def main():
     print("Problem 1")
+    print("=========")
     problem1(375,0.1,9)
     print("Problem 2")
+    print("=========")
     print("Accuracy is via RMSE")
     problem2(500,0.01,5)
 
