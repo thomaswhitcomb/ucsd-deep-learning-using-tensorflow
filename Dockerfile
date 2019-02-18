@@ -8,6 +8,7 @@ RUN apt install -y git
 RUN apt install -y sudo
 RUN apt-get install net-tools
 RUN apt install -y curl git-core gcc make zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev libssl-dev
+RUN sudo apt-get install tmux
 #
 RUN git config --global user.email "thomaswhitcomb@gmail.com"
 RUN git config --global user.name "Tom Whitcomb"
@@ -30,4 +31,5 @@ RUN pip3 install SymPy
 RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 
 COPY bashrc /root/.bashrc
+COPY tmux /root/.tmux.conf
 RUN python3 -c "import tensorflow as tf; print(tf.__version__)"
