@@ -137,16 +137,9 @@ class Problem2TF(Problem2Base):
 
 
 def main():
-    problem2 = Problem2SK()
-    problem2.create_dataset()
-    slope,intercept = problem2.compute_regression()
-    print(slope,intercept)
 
-    problem2 = Problem2TF()
-    problem2.create_dataset()
-    problem2.build()
-    cost,slope1,slope2,intercept = problem2.compute_regression(1000000,0.01)
-    sys.exit()
+    print("Problem 1 - SKLearn")
+    print("====================")
     problem1 = Problem1SK()
     problem1.create_dataset()
     slope,intercept = problem1.compute_regression()
@@ -154,6 +147,8 @@ def main():
     assert ("%.8f" % slope[0]) == "3.54942311"
     assert ("%.15f" % intercept) == "14.841075232789862"
 
+    print("Problem 1 - Tensorflow")
+    print("======================")
     problem1 = Problem1TF()
     problem1.create_dataset()
     problem1.build()
@@ -171,5 +166,20 @@ def main():
     assert ("%.6f" % cost) == "11.365601"
     assert ("%.7f" % slope[0]) == "3.5774026"
     assert ("%.6f" % intercept[0]) == "14.186133"
+
+    print("Problem 2 - SKLearn")
+    print("====================")
+    problem2 = Problem2SK()
+    problem2.create_dataset()
+    slope,intercept = problem2.compute_regression()
+    print(slope,intercept)
+
+    print("Problem 2 - Tensorflow")
+    print("======================")
+    problem2 = Problem2TF()
+    problem2.create_dataset()
+    problem2.build()
+    cost,slope1,slope2,intercept = problem2.compute_regression(1000000,0.01)
+
 if __name__ == "__main__":
     main()

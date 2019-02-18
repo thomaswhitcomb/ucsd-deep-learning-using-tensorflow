@@ -150,6 +150,7 @@ def main():
     print("Problem 1")
     problem1(375,0.1,9)
     print("Problem 2")
+    print("Accuracy is via RMSE")
     problem2(500,0.01,5)
 
 if __name__ == "__main__":
