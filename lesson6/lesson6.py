@@ -22,14 +22,11 @@ def problem1():
         db = dz_dy(x_start,y_start)
         x_start1 = x_start - (learning_rate *dW)
         y_start1 = y_start - (learning_rate *db)
-        history.append((x_start1,y_start1))
-        #print(x_start1,y_start1)
         if abs(x_start1 - x_start) <= epsilon and abs(y_start1 - y_start) <= epsilon:
-            print("epsilon hit. i= ",i)
-            return x_start1, y_start1    
+            return i,x_start1, y_start1
         x_start = x_start1
         y_start = y_start1
-    return None,None
+    return -1,None,None
 
 class Problem2():
     def __init__(self):
@@ -57,32 +54,34 @@ class Problem2():
         b_start = 0
         learning_rate = 0.00001 
         iterations = 2500000
-        epsilon = 0.0001
+        epsilon = 0.0000000001
         history = [(m_start,b_start)]
         for i in range(iterations):
             dW = dRSS_dm(m_start,b_start)
             db = dRSS_db(m_start,b_start)
             m_start1 = m_start - (learning_rate * dW)
             b_start1 = b_start - (learning_rate * db)
-            #history.append((m_start1,b_start1))
-            #print("m_start",m_start1,"m_target",m_target,abs(m_start1-m_target))
             if abs(m_start1 - m_target) <= epsilon and abs(b_start1 - b_target) <= epsilon:
-                print("epsilon hit. i= ",i)
-                return m_start1,b_start1
+                return i,m_start1,b_start1
             m_start = m_start1
             b_start = b_start1
-        return m_start,b_start
+        return -1,None,None
 
 
 def main():
     print("Problem 1")
-    print(problem1())
+    print("=========")
+    iterations,slope,intercept = problem1()
+    print("  ",iterations,"iterations to reach a slope =",slope,"and intercept =",intercept)
+  
     print("Problem 2")
+    print("=========")
     problem2 = Problem2()
     problem2.create_dataset()
     m_target,b_target = problem2.sk_solution()
-    print("SK",m_target,b_target)
-    print("DG",problem2.dg_solution(m_target,b_target))
+    print("   Scikit-learn slope =",m_target,"and intercept =",b_target)
+    iterations,slope,intercept = problem2.dg_solution(m_target,b_target)
+    print("  ",iterations,"DG iterations to reach a slope =",slope,"and intercept =",intercept)
 
 
 if __name__ == "__main__":
