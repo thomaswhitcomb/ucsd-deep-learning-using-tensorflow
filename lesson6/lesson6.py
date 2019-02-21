@@ -45,16 +45,14 @@ class Problem2():
         linreg.fit(x,self.train_y)
         return linreg.coef_,linreg.intercept_
 
-    def dg_solution(self,m_target,b_target):
+    def dg_solution(self,m_target,b_target,learning_rate,epsilon):
         def dRSS_dm(m,b): 
             return(-2*sum((self.train_y-m*self.train_x-b)*self.train_x))
         def dRSS_db(m,b):
             return(-2*sum((self.train_y-m*self.train_x-b)))
         m_start = 0
         b_start = 0
-        learning_rate = 0.00001 
         iterations = 2500000
-        epsilon = 0.0000000001
         history = [(m_start,b_start)]
         for i in range(iterations):
             dW = dRSS_dm(m_start,b_start)
@@ -79,9 +77,16 @@ def main():
     problem2 = Problem2()
     problem2.create_dataset()
     m_target,b_target = problem2.sk_solution()
-    print("   Scikit-learn slope =",m_target,"and intercept =",b_target)
-    iterations,slope,intercept = problem2.dg_solution(m_target,b_target)
-    print("  ",iterations,"DG iterations to reach a slope =",slope,"and intercept =",intercept)
+    print("   Scikit-learn slope =",m_target[0],"and intercept =",b_target)
+    learning_rate = 0.0001
+    iterations,slope,intercept = problem2.dg_solution(m_target,b_target,learning_rate,0.0000000001)
+    print("  ",iterations,"DG iterations with",learning_rate,"learning rate to reach  m =",slope,"and b =",intercept)
+    learning_rate = 0.00001
+    iterations,slope,intercept = problem2.dg_solution(m_target,b_target,learning_rate,0.0000000001)
+    print("  ",iterations,"DG iterations with",learning_rate,"learning rate to reach  m =",slope,"and b =",intercept)
+    learning_rate = 0.000001
+    iterations,slope,intercept = problem2.dg_solution(m_target,b_target,learning_rate,0.0000000001)
+    print("  ",iterations,"DG iterations with",learning_rate,"learning rate to reach  m =",slope,"and b =",intercept)
 
 
 if __name__ == "__main__":
