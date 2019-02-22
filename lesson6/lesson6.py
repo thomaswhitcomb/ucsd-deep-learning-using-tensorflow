@@ -80,13 +80,13 @@ def main():
     print("   Scikit-learn slope =",m_target[0],"and intercept =",b_target)
     learning_rate = 0.0001
     iterations,slope,intercept = problem2.dg_solution(m_target,b_target,learning_rate,0.0000000001)
-    print("  ",iterations,"DG iterations with",learning_rate,"learning rate to reach  m =",slope,"and b =",intercept)
+    print("  ",iterations,"DG iterations with",("%f" % learning_rate),"learning rate to reach  m =",slope,"and b =",intercept)
     learning_rate = 0.00001
     iterations,slope,intercept = problem2.dg_solution(m_target,b_target,learning_rate,0.0000000001)
-    print("  ",iterations,"DG iterations with",learning_rate,"learning rate to reach  m =",slope,"and b =",intercept)
+    print("  ",iterations,"DG iterations with",("%f" % learning_rate),"learning rate to reach  m =",slope,"and b =",intercept)
     learning_rate = 0.000001
     iterations,slope,intercept = problem2.dg_solution(m_target,b_target,learning_rate,0.0000000001)
-    print("  ",iterations,"DG iterations with",learning_rate,"learning rate to reach  m =",slope,"and b =",intercept)
+    print("  ",iterations,"DG iterations with",("%f" % learning_rate),"learning rate to reach  m =",slope,"and b =",intercept)
 
 
 if __name__ == "__main__":
