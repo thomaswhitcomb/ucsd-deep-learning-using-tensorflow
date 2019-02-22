@@ -23,7 +23,7 @@ def problem1():
         x_start1 = x_start - (learning_rate *dW)
         y_start1 = y_start - (learning_rate *db)
         if abs(x_start1 - x_start) <= epsilon and abs(y_start1 - y_start) <= epsilon:
-            return i,x_start1, y_start1
+            return i+1,x_start1, y_start1
         x_start = x_start1
         y_start = y_start1
     return -1,None,None
