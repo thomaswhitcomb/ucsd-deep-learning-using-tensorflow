@@ -10,13 +10,7 @@ import numpy as np
 from sklearn.metrics import confusion_matrix
 from tensorflow.examples.tutorials.mnist import input_data
 
-print(tf.__version__)
-
-###########################################
-# 3.3 Function to perform optimization iteration #
-batch_size = 100
-def optimize(optimizer,num_iterations,learning_rate):
-    print("Optimize run: iteration",num_iterations,", learning rate",learning_rate)
+def optimize(optimizer,num_iterations,learning_rate,batch_size):
     for i in range(num_iterations):
         # Get a batch of training examples.
         # x_batch now holds a batch of images and
@@ -42,11 +36,11 @@ def print_confusion_matrix():
     # Print the confusion matrix as text. 
     print(cm)
 
-def print_accuracy():
+def print_accuracy(iterations,learning_rate,batch_size):
     # Use TensorFlow to compute the accuracy.
     acc = session.run(accuracy , feed_dict= feed_dict_test)
     # Print the accuracy.
-    print('Accuracy on Test-st : {0:.1%}'.format(acc))
+    print('Accuracy on Test-st : {:2.1f}% with {:d} iterations, {:1.2f} learning rate and {:d} batch size'.format((acc*100),iterations,learning_rate,batch_size))
 ################################################
 # 1.2 Download and read MNIST data
 #
@@ -110,7 +104,6 @@ session = tf.Session()
 
 ############################################# # 3.2 Initialize Variables
 #
-session.run(tf.global_variables_initializer())
 
 ###################################################
 # 3.4 Optimization Iteration
@@ -120,22 +113,35 @@ feed_dict_test = {
     y_true : data.test.labels, 
     y_true_cls : [np.argmax(label) for label in data.test.labels]
 }
-print_accuracy()
 
 #############################################
 # 4.2 Performance Iteration#1
 #
 # Number of iteration means how many of batchs are iterated #
-for i in [1,9,990]:
-  for lrx in [x/10 for x in range(5,0,-1)]:
-    optimize(gradient_descent_optimizer,num_iterations= i,learning_rate = lrx)
-    print_accuracy()
+print("Gradient decent optimizer")
+for lrx in [x/10 for x in range(5,0,-1)]:
+    session.run(tf.global_variables_initializer())
+    for i in [1,9,990]:
+        optimize(gradient_descent_optimizer,num_iterations= i,learning_rate = lrx,batch_size=100)
+        print_accuracy(i,lrx,100)
 
-print_confusion_matrix()
+#print_confusion_matrix()
 
-for i in [1,9,990]:
-  for lrx in [x/10 for x in range(5,0,-1)]:
-    optimize(adagrad_optimizer,num_iterations= i,learning_rate = lrx)
-    print_accuracy()
+print("Adagra optimizer ")
+for lrx in [x/10 for x in range(5,0,-1)]:
+    session.run(tf.global_variables_initializer())
+    for i in [1,9,990]:
+        optimize(adagrad_optimizer,num_iterations= i,learning_rate = lrx,batch_size=100)
+        print_accuracy(i,lrx,100)
+
+#print_confusion_matrix()
+print("Adagra optimizer with incremental batch size ")
+session.run(tf.global_variables_initializer())
+for lrx in [x/10 for x in range(5,0,-1)]:
+    for b in range(1,1000,100):
+        session.run(tf.global_variables_initializer())
+        for i in [1,9,990]:
+            optimize(adagrad_optimizer,num_iterations= i,learning_rate = lrx,batch_size=100)
+            print_accuracy(i,lrx,b)
 
 print_confusion_matrix()
