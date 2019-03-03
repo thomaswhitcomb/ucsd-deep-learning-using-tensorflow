@@ -15,10 +15,9 @@ alias la='ls -a'
 alias h='history'
 alias lsd='ls -l | grep ^d'
 alias l.='ls -a | grep "^\."'
-alias vi='/usr/local/bin/vim'
 alias tmux="TERM=screen-256color-bce tmux"
 export AWS_DEFAULT_REGION=us-west-2
-export PS1="\W\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
+export PS1="DOCKER \W\[\033[32m\]\$(parse_git_branch)\[\033[00m\] $ "
 source ~/git-completion.bash
 alias rm='rm -i'
 alias clone='git clone https://github.com/thomaswhitcomb/ucsd-deep-learning-using-tensorflow.git'
