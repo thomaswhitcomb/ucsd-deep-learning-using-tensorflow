@@ -78,3 +78,8 @@ misc.imsave("filtered_lady_9x9.png",np.absolute(grad))
 
 grad = signal.convolve2d(image_array,filtr_13x13, mode='same', boundary='symm')
 misc.imsave("filtered_lady_13x13.png",np.absolute(grad))
+
+filtr_15x15 = [[1 for i in range(15)] for j in range(15)]
+filtr_15x15[8][8] = -224
+grad = signal.convolve2d(image_array,filtr_15x15, mode='same', boundary='symm')
+misc.imsave("filtered_lady_15x15.png",np.absolute(grad))
