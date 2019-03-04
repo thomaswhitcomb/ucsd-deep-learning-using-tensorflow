@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from scipy import ndimage 
 import sys
+import math
 
 im = Image.open('01 Lady.png')
 misc.imsave("filtered_lady_start.png",im)
@@ -83,3 +84,18 @@ filtr_15x15 = [[1 for i in range(15)] for j in range(15)]
 filtr_15x15[8][8] = -224
 grad = signal.convolve2d(image_array,filtr_15x15, mode='same', boundary='symm')
 misc.imsave("filtered_lady_15x15.png",np.absolute(grad))
+
+def make_filter(n):
+
+  filtr = [[1 for i in range(n)] for j in range(n)]
+  filtr[math.ceil(n/2)][math.ceil(n/2)] = 1-(n ** 2)
+  return filtr
+
+def filter_image(image,filtr_size,name):
+    filtr = make_filter(filtr_size)
+    grad = signal.convolve2d(image,filtr, mode='same', boundary='symm')
+    misc.imsave(name,np.absolute(grad))
+
+filter_image(image_array,9,"auto_9x9.png")
+filter_image(image_array,7,"auto_7x7.png")
+filter_image(image_array,29,"auto_29x29.png")
