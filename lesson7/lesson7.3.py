@@ -96,6 +96,8 @@ def filter_image(image,filtr_size,name):
     grad = signal.convolve2d(image,filtr, mode='same', boundary='symm')
     misc.imsave(name,np.absolute(grad))
 
-filter_image(image_array,9,"auto_9x9.png")
-filter_image(image_array,7,"auto_7x7.png")
+filter_image(image_array,7,"auto_5x5.png")
+filter_image(image_array,11,"auto_11x11.png")
+filter_image(image_array,15,"auto_15x15.png")
 filter_image(image_array,29,"auto_29x29.png")
+filter_image(image_array,39,"auto_39x39.png")
