@@ -12,35 +12,23 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 def optimize(optimizer,num_iterations,learning_rate,batch_size):
     for i in range(num_iterations):
-        # Get a batch of training examples.
-        # x_batch now holds a batch of images and
-        # y_true_batch are the true labels for those images.
         x_batch, y_true_batch = data.train.next_batch(batch_size= batch_size)
-        # Put the batch into a dict with the proper names
-        # for placeholder variables in the TensorFlow graph. # Note that the placeholder for y_true_cls is not set # because it is not used during training. 
         feed_dict_train = {x : x_batch,
                            lr: learning_rate,
                            y_true : y_true_batch}
-        # Run the optimizer using this batch of training data.
-        # TensorFlow assigns the variables in feed_dict train
-        # to the placeholder variables and then runs the optimizer. 
         session.run(optimizer, feed_dict = feed_dict_train)
 
 def print_confusion_matrix():
-    # Get the true classifications for the Test-set.
     cls_true = [np.argmax(label) for label in data.test.labels]
-    # Get the predicted classifications for the Test-set.
     cls_pred = session.run(y_pred_cls, feed_dict = feed_dict_test)
-    # Get the confusion matrix using sklearn. 
     cm = confusion_matrix(y_true = cls_true, y_pred = cls_pred)
-    # Print the confusion matrix as text. 
     print(cm)
 
 def print_accuracy(iterations,learning_rate,batch_size):
     # Use TensorFlow to compute the accuracy.
     acc = session.run(accuracy , feed_dict= feed_dict_test)
     # Print the accuracy.
-    print('Accuracy on Test-st : {:2.1f}% with {:d} iterations, {:1.2f} learning rate and {:d} batch size'.format((acc*100),iterations,learning_rate,batch_size))
+    print('Accuracy : {:2.1f}% with {:d} iterations, {:1.2f} learning rate and {:d} batch size'.format((acc*100),iterations,learning_rate,batch_size))
 ################################################
 # 1.2 Download and read MNIST data
 #
