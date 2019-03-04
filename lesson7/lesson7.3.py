@@ -34,6 +34,17 @@ filtr_5x5 = np.array([
 grad = signal.convolve2d(image_array,filtr_5x5, mode='same', boundary='symm')
 misc.imsave("filtered_lady_5x5.png",np.absolute(grad))
 
+filtr2 = np.genfromtxt('filter2.csv',delimiter=",")
+filtr1 = np.genfromtxt('filter1.csv',delimiter=",")
+filtr3 = [[-1,-1,-1],[-1,9,-1],[-1,-1,-1]]
+filtr4 = [[0,-1,0],[-1,5,-1],[0,-1,0]]
+
+x1 = np.hstack((filtr1,filtr2,filtr3,filtr2,filtr1))
+x2 = np.hstack((filtr1,filtr2,filtr3,filtr2,filtr1))
+x3 = np.hstack((filtr1,filtr2,filtr3,filtr2,filtr1))
+x4 = np.hstack((filtr1,filtr2,filtr3,filtr2,filtr1))
+x5 = np.hstack((filtr1,filtr2,filtr3,filtr2,filtr1))
+X = np.vstack((x1,x2,x3,x4,x5))
 
 I = np.array([
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -52,9 +63,8 @@ I = np.array([
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]])
 L1 = ndimage.laplace(I)
-print(L1)
 grad = signal.convolve2d(image_array,L1, mode='same', boundary='symm')
-misc.imsave("filtered_lady_L1.png",np.absolute(grad))
+misc.imsave("lady_L1.png",np.absolute(grad))
 
 I = np.array([
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -67,7 +77,7 @@ I = np.array([
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,24,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,32,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -80,6 +90,5 @@ I = np.array([
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]])
 
 L2 = ndimage.laplace(I)
-print(L2)
 grad = signal.convolve2d(image_array,L2, mode='same', boundary='symm')
-misc.imsave("filtered_lady_L2.png",np.absolute(grad))
+misc.imsave("lady_L2.png",np.absolute(grad))
