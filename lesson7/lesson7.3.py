@@ -54,7 +54,7 @@ I = np.array([
 L1 = ndimage.laplace(I)
 print(L1)
 grad = signal.convolve2d(image_array,L1, mode='same', boundary='symm')
-misc.imsave("filtered_lady_L1.png",np.absolute(grad))
+misc.imsave("filtered_lady_15x15.png",np.absolute(grad))
 
 I = np.array([
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -82,4 +82,4 @@ I = np.array([
 L2 = ndimage.laplace(I)
 print(L2)
 grad = signal.convolve2d(image_array,L2, mode='same', boundary='symm')
-misc.imsave("filtered_lady_L2.png",np.absolute(grad))
+misc.imsave("filtered_lady_21x21.png",np.absolute(grad))
