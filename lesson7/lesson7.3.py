@@ -3,7 +3,7 @@ from scipy import signal
 from scipy import misc
 import matplotlib.pyplot as plt 
 from PIL import Image
-from scipy.ndimage import filters
+from scipy import ndimage 
 import sys
 
 im = Image.open('01 Lady.png')
@@ -42,17 +42,18 @@ I = np.array([
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,1,-24,1,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,24,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]])
-
-grad = signal.convolve2d(image_array,I, mode='same', boundary='symm')
+L1 = ndimage.laplace(I)
+print(L1)
+grad = signal.convolve2d(image_array,L1, mode='same', boundary='symm')
 misc.imsave("filtered_lady_L1.png",np.absolute(grad))
 
 I = np.array([
@@ -66,7 +67,7 @@ I = np.array([
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+[0,0,0,0,0,0,0,0,0,0,24,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -78,7 +79,7 @@ I = np.array([
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]])
 
-L2 = filters.gaussian_laplace(I,sigma=1)
+L2 = ndimage.laplace(I)
 print(L2)
 grad = signal.convolve2d(image_array,L2, mode='same', boundary='symm')
-misc.imsave("filtered_lady_21x21.png",np.absolute(grad))
+misc.imsave("filtered_lady_L2.png",np.absolute(grad))
