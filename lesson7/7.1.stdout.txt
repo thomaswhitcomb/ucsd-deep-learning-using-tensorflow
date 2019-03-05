@@ -1,7 +1,3 @@
-Extracting MNIST_data/train-images-idx3-ubyte.gz
-Extracting MNIST_data/train-labels-idx1-ubyte.gz
-Extracting MNIST_data/t10k-images-idx3-ubyte.gz
-Extracting MNIST_data/t10k-labels-idx1-ubyte.gz
 Gradient decent optimizer
 Accuracy : 32.9% with 1 iterations, 0.50 learning rate and 100 batch size
 Accuracy : 75.4% with 9 iterations, 0.50 learning rate and 100 batch size

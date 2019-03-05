@@ -27,6 +27,7 @@ RUN pip3 install Matplotlib
 RUN pip3 install Scikit-Learn
 RUN pip3 install Seaborn
 RUN pip3 install SymPy
+RUN pip3 install pillow
 
 COPY bashrc /root/.bashrc
 COPY tmux /root/.tmux.conf
