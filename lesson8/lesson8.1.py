@@ -10,9 +10,9 @@ import sys
 from keras.models import Sequential
 from keras.layers import LSTM
 
-scale = 100
-seq_size = 6
-epochs = 500
+scale = 200
+seq_size = 8
+epochs = 1000
 #################################################
 # Create dataset for RNN
 #
@@ -61,10 +61,11 @@ history = model.fit(x_train, y_train, epochs=epochs, validation_data=(x_test,y_t
 results = model.predict(x_test)
 plt.scatter(range(len(x_test)), results,c='r')
 plt.scatter(range(len(x_test)), y_test, c='g')
+plt.savefig("lesson8.1.scatter.png")
 
 ####################################################
 # Plot the loss Function
 #
 plt.plot(history.history['loss'])
-plt.savefig("lesson8.png")
+plt.savefig("lesson8.1.loss.png")
 
