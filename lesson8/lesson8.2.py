@@ -91,7 +91,7 @@ update(initial_state, action, gamma)
 
 # Training
 scores = []
-for i in range(700):
+for i in range(900):
     current_state = np.random.randint(0, int(Q.shape[0]))
     available_act = available_actions(current_state)
     action = sample_next_action(available_act)
