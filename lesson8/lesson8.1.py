@@ -12,7 +12,7 @@ from keras.layers import LSTM
 
 scale = 200
 seq_size = 8
-epochs = 1000
+epochs = 700
 #################################################
 # Create dataset for RNN
 #
